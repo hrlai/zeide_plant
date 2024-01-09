@@ -7,7 +7,10 @@ library(greta.dynamics)
 # One species -------------------------------------------------------------
 # Following https://traitecoevo.github.io/plant/articles/individuals.html
 ind    <- FF16_Individual()
-env    <- FF16_fixed_environment(0.5)
+# shaded env seems to exaggerate growth difference due to trait, 
+# but we might want to change this back to full sun to pretend that every tree
+# grows on its own 
+env    <- FF16_fixed_environment(0.5)    
 times  <- seq(0, 50, length.out = 101)
 result <- grow_individual_to_time(ind, times, env)
 
