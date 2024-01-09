@@ -7,7 +7,7 @@ library(greta.dynamics)
 # One species -------------------------------------------------------------
 # Following https://traitecoevo.github.io/plant/articles/individuals.html
 ind    <- FF16_Individual()
-env    <- FF16_fixed_environment(1.0)
+env    <- FF16_fixed_environment(0.5)
 times  <- seq(0, 50, length.out = 101)
 result <- grow_individual_to_time(ind, times, env)
 
@@ -23,6 +23,9 @@ y <- rlnorm(length(times),
             0.1)
 
 # fit ODE model using greta
+# there are many ways to fit ODE or nonlinear models
+# but I opted for greta for speed and transparent model specification
+
 # the Zeide function for ODE
 zeide <- function(y, t, a, b, c) {
     dy <- a * y^b * exp(-c*y)
@@ -54,7 +57,7 @@ y_hat <- calculate(mu, values = est$par)
 
 # compare (looks okay)
 # we used the "wrong" phenomenological model and potentially inappropriate priors
-plot(times, y)
+plot(times, y, ylab = "Height", xlab = "t")
 lines(times, y_hat$mu)
 
 
@@ -112,10 +115,10 @@ par_list <- t(sapply(est_list, function(x) unlist(x$par)))
 par_list <- cbind(LMA = sapply(s1, function(x) x$lma), par_list)
 pairs(par_list[, 1:4])
 
-# 
+# compare
 par(mfrow = c(1, 2))
-matplot(result_mat, type = "l", ylim = c(0, 25))
-matplot(simplify2array(y_list), ylim = c(0, 25), pch = 16)
+matplot(result_mat, type = "l", ylim = c(0, 25), ylab = "Height", xlab = "t")
+matplot(simplify2array(y_list), ylim = c(0, 25), pch = 16, ylab = "Height", xlab = "t")
 matlines(simplify2array(lapply(y_hat_list, unlist)))
 
          
